@@ -20,7 +20,7 @@
   water storage that is simple associated with fAPAR, and if there is
   water soil water restrictions to evaporation do not apply.
   
-  Model has been developed and calibrated in Peltoniemi et al. submitted
+  Model has been developed and calibrated in Peltoniemi et al. 2015
   for Hyytiälä and Sodankylä eddy covariance sites (Scots pine).
   
   Preliminary calibrations of the model show promising performance in
@@ -51,10 +51,10 @@
 \author{
   Mikko Peltoniemi
   
-  Maintainer: Mikko Peltoniemi <mikko.peltoniemi@metla.fi>
+  Maintainer: Mikko Peltoniemi <mikko.peltoniemi@luke.fi>
 }
 \references{ 
-  Peltoniemi et al., submitted 18.11.2013 
+  Peltoniemi et al., Peltoniemi M., Pulkkinen M., Aurela M., Pumpanen J., Kolari P. & Mäkelä A. 2015: A semi-empirical model of boreal-forest gross primary production, evapotranspiration, and soil water — calibration and sensitivity analysis. Boreal Env. Res. 20: 151–171. 
 }
 
 \keyword{ package }
