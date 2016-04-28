@@ -4,94 +4,98 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     DOY=NA, ## Needed for deciduous phenology (and if radmodel != 0), otherwise assume simulation
     ## starting DOY=1, and continuing  all years having 365 days
     ## Irrelevant if fPheno-parameters are -999 (default, used for conifers)
-    LOGFLAG = 0, control=0, # Control is the E model selection parameter. 
+    LOGFLAG = 0, control=0, pft="evergreen",# Control is the E model selection parameter. 
     parmodel=0, LAT=NA, PAR0=NA,# If PAR is missing, set parmodel > 0 (and give lat and the DOY as input) # PAR0 is latititude and DOY specific information for parmodel 11 and 12
     returncols=c('GPP','ET','SW'))  {
 
 
-    
     len = as.integer(length(TAir))
     if (is.na(GPPmeas)) GPPmeas = rep(-999, len)
     if (is.na(ETmeas)) ETmeas = rep(-999, len)
-    if (is.na(SWmeas)) SWmeas = rep(-999, len)
-
-    
+    if (is.na(SWmeas)) SWmeas = rep(-999, len)    
     transp = evap = fWE = rep(-999, len)
 
-    
-    if (any(is.na(DOY))) {
-        if (any(!is.na(p[28:30])))
-            if (LOGFLAG > 0) print('warning: Some leaf phenology parameter(s) set but DOY not provided, starting from Jan 1 and assuming 365 d / year.')
-        DOY = rep(1:365, ceiling(len/365))
-        DOY = DOY[1:len]
-        if (LOGFLAG > 0 & parmodel > 0)
-            print('warning: you are using model estimated PAR, are you sure DOY is correct, as it was assumed you are starting from Jan 1 and there are 365 d / year')
-    }
-    
-    
+    ## NOT SUPPORTED PRESENTLY:
+    ## If radiation information is missing, daily radiation can be calculated
+    ## from theoretical model based on latitude (deg), modified by empirical relationship
     if (parmodel == 1 | parmodel == 2) { ## Theoretical radiation modified by VPD
         stopifnot(!any(is.na(LAT)))
         PAR=dPAR(LAT=LAT,DOY=DOY,VPD=VPD, radmodel=parmodel)
     }
-
-
-    if (parmodel == 11 | parmodel == 12) { ## Speed-up, requires calc of dPAR0()
-        
+    if (parmodel == 11 | parmodel == 12) { ## Speed-up, requires calculation of dPAR0()   
         PAR=dPAR1(PAR0,VPD=VPD, radmodel=parmodel)
-
+    }
+        
+    
+    ## PARAMETERS
+    if (control == -1) {} ## FOR TESTS
+    ## DEFAULT SET
+    ## The following is default set, calibrated for a range of conifer sites in Scandinavia
+    ## Ten sites with varying site-years used in the calibration.
+    ## Variant of the calibration made to the same data by F. Minunno,
+    ## where evapotranspiration was not affected by temperature.
+    ## Here free evap. essentially follows the form proposed by Priestley-taylor eq.
+    if (control == 0) {
+        defaults = c(413.0, ## 1 soildepth
+            0.450, ## 2 ThetaFC
+            0.118, ## 3 ThetaPWP
+            3, ## 4 tauDrainage
+            ## GPP_MODEL_PARAMETERS
+            0.7457, ## 5 betaGPP
+            10.93, ## 6 tauGPP
+            -3.063, ## 7 S0GPP
+            17.72, ## 8 SmaxGPP
+            -0.1027, ## 9 kappaGPP
+            0.03673, ## 10 gammaGPP
+            0.7779, ## 11 soilthresGPP
+            0.500, ## 12 b.CO2, cmCO2
+            -0.364, ## 13 x.CO2, ckappaCO2
+            ## EVAPOTRANSPIRATION_PARAMETERS
+            0.2715, ## 14 betaET
+            0.8351, ## 15 kappaET
+            0.07348, ## 16 chiET
+            0.9996, ## 17 soilthresET
+            0.4428, ## 18 nu ET
+            ## SNOW_RAIN_PARAMETERS
+            1.2, ## 19 Meltcoef
+            0.33, ## 20 I_0
+            4.970496, ## 21 CWmax, i.e. max canopy water
+            0, ## 22 SnowThreshold, 
+            0, ## 23 T_0, 
+            160, ## 24 SWinit, ## START INITIALISATION PARAMETERS 
+            0, ## 25 CWinit, ## Canopy water
+            0, ## 26 SOGinit, ## Snow on Ground 
+            20, ## 27 Sinit ##CWmax
+            -999, ## t0 fPheno_start_date_Tsum_accumulation; conif -999, for birch 57
+            -999, ## tcrit, fPheno_start_date_Tsum_Tthreshold, 1.5 birch
+            -999 ##tsumcrit, fPheno_budburst_Tsum, 134 birch
+                     )
     }
     
-    
-    
-    ## DEFAULT PARAMETERS
-    ## SITE
-    if (control == 0 | control == -1) ## Priestley-taylor version calibration; -1 for testing
-        defaults = c(413.0, ## 1 soildepth
-    0.450, ## 2 ThetaFC
-    0.118, ## 3 ThetaPWP
-    3, ## 4 tauDrainage
-    ## GPP_MODEL_PARAMETERS
-    0.748018, ## 5 betaGPP
-    13.23383, ## 6 tauGPP
-    -3.9657867, ## 7 S0GPP
-    18.76696, ## 8 SmaxGPP
-    -0.130473, ## 9 kappaGPP
-    0.034459, ## 10 gammaGPP
-    0.450828, ## 11 soilthresGPP
-    0.500, ## 12 b.CO2, cmCO2
-    -0.364, ## 13 x.CO2, ckappaCO2
-    ## EVAPOTRANSPIRATION_PARAMETERS
-    0.324463, ## 14 betaET
-    0.874151, ## 15 kappaET
-    0.075601, ## 16 chiET
-    0.541605, ## 17 soilthresET
-    0.273584, ## 18 nu ET
-    ## SNOW_RAIN_PARAMETERS
-    1.2, ## 19 Meltcoef
-    0.33, ## 20 I_0
-    4.970496, ## 21 CWmax, i.e. max canopy water
-    0, ## 22 SnowThreshold, 
-    0, ## 23 T_0, 
-    200, ## 24 SWinit, ## START INITIALISATION PARAMETERS 
-    0, ## 25 CWinit, ## Canopy water
-    0, ## 26 SOGinit, ## Snow on Ground 
-    20, ## 27 Sinit ##CWmax
-   -999, ## t0 fPheno_start_date_Tsum_accumulation; conif -999, for birch 57
-   -999, ## tcrit, fPheno_start_date_Tsum_Tthreshold, 1.5 birch
-    -999 ##tsumcrit, fPheno_budburst_Tsum, 134 birch
-            )
-    if (control == 1) ## Peltoniemi et al., BER submitted
-        defaults = c(413.0, ## 1 soildepth
+    if (control == 1) ## Peltoniemi et al., 2015, Boreal Env. Res. for Hyytiala
+        defaults = c(413.0, 
             0.450, 0.118, 3, 0.748464, 12.74915, -3.566967, 18.4513, -0.136732,
             0.033942, 0.448975, 0.500, -0.364, 0.33271, 0.857291, 0.041781,
             0.474173, 0.278332, 1.5, 0.33, 4.824704, 0, 0, 180, 0, 0, 10,
             -999, -999, -999) 
-
-
-
     p[is.na(p)] = defaults[is.na(p)] ## Note: this may slow down a bit when looping MCMC
 
 
+    ## Notify about leaf out model setting if it is deciduous species or other annual,
+    ## note DOY and phenology parameters required.
+    ## tip: p[28:30] <- c(57, 1.5, 134) # Phenol. mod. (Linkosalo et al. 2008) 
+    if (pft != "evergreen") {
+        if (any(is.na(DOY))) {
+            if (any(!is.na(p[28:30]))) 
+                if (LOGFLAG > 0) print('warning: Some leaf phenology parameter(s) set but DOY not provided, starting from Jan 1 and assuming 365 d / year.')
+            DOY = rep(1:365, ceiling(len/365))
+            DOY = DOY[1:len]
+            if (LOGFLAG > 0 & parmodel > 0)
+                print('warning: you are using model estimated PAR, are you sure DOY is correct, as it was assumed you are starting from Jan 1 and there are 365 d / year')
+        }
+    }
+    
+        
     .C('call_preles', 
           PAR=as.double(PAR), TAir=as.double(TAir), VPD=as.double(VPD),
           Precip=as.double(Precip), CO2=as.double(CO2), fAPAR=as.double(fAPAR),  
