@@ -4,11 +4,11 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     DOY=NA, ## Needed for deciduous phenology (and if radmodel != 0), otherwise assume simulation
     ## starting DOY=1, and continuing  all years having 365 days
     ## Irrelevant if fPheno-parameters are -999 (default, used for conifers)
-    LOGFLAG = 0, control=0, pft="evergreen",# Control is the E model selection parameter. 
+    LOGFLAG = 0, control=1, pft="evergreen",# Control is the E model selection parameter. 
     parmodel=0, LAT=NA, PAR0=NA,# If PAR is missing, set parmodel > 0 (and give lat and the DOY as input) # PAR0 is latititude and DOY specific information for parmodel 11 and 12
     returncols=c('GPP','ET','SW'))  {
 
-
+    
     len = as.integer(length(TAir))
     if (is.na(GPPmeas)) GPPmeas = rep(-999, len)
     if (is.na(ETmeas)) ETmeas = rep(-999, len)
