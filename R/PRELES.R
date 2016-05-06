@@ -1,7 +1,7 @@
 PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     GPPmeas=NA, ETmeas=NA, SWmeas=NA, ## OPTIONAL FOR BYPASSING PREDICTION
     p = rep(NA, 30), ## PARAMETER VECTOR. NA parameters replaced with defaults.
-    DOY=NA, ## Needed for deciduous phenology (and if radmodel != 0), otherwise assume simulation
+    DOY=NA, ## REQUIRED.
     ## starting DOY=1, and continuing  all years having 365 days
     ## Irrelevant if fPheno-parameters are -999 (default, used for conifers)
     LOGFLAG = 0, control=1, pft="evergreen",# Control is the E model selection parameter. 
