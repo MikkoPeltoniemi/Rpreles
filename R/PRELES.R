@@ -18,13 +18,13 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     ## NOT SUPPORTED PRESENTLY:
     ## If radiation information is missing, daily radiation can be calculated
     ## from theoretical model based on latitude (deg), modified by empirical relationship
-    if (parmodel == 1 | parmodel == 2) { ## Theoretical radiation modified by VPD
-        stopifnot(!any(is.na(LAT)))
-        PAR=dPAR(LAT=LAT,DOY=DOY,VPD=VPD, radmodel=parmodel)
-    }
-    if (parmodel == 11 | parmodel == 12) { ## Speed-up, requires calculation of dPAR0()   
-        PAR=dPAR1(PAR0,VPD=VPD, radmodel=parmodel)
-    }
+    ## if (parmodel == 1 | parmodel == 2) { ## Theoretical radiation modified by VPD
+    ##     stopifnot(!any(is.na(LAT)))
+    ##    PAR=dPAR(LAT=LAT,DOY=DOY,VPD=VPD, radmodel=parmodel)
+    ## }
+    ## if (parmodel == 11 | parmodel == 12) { ## Speed-up, requires calculation of dPAR0()   
+    ##    PAR=dPAR1(PAR0,VPD=VPD, radmodel=parmodel)
+    ##}
         
     
     ## PARAMETERS
@@ -80,21 +80,16 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
             -999, -999, -999) 
     p[is.na(p)] = defaults[is.na(p)] ## Note: this may slow down a bit when looping MCMC
 
-
-    ## Notify about leaf out model setting if it is deciduous species or other annual,
-    ## note DOY and phenology parameters required.
+    ## DOY is needed for other than conifers. Phenology model requires parameters:
     ## tip: p[28:30] <- c(57, 1.5, 134) # Phenol. mod. (Linkosalo et al. 2008) 
-    if (pft != "evergreen") {
-        if (any(is.na(DOY))) {
-            if (any(!is.na(p[28:30]))) 
-                if (LOGFLAG > 0) print('warning: Some leaf phenology parameter(s) set but DOY not provided, starting from Jan 1 and assuming 365 d / year.')
-            DOY = rep(1:365, ceiling(len/365))
-            DOY = DOY[1:len]
-            if (LOGFLAG > 0 & parmodel > 0)
-                print('warning: you are using model estimated PAR, are you sure DOY is correct, as it was assumed you are starting from Jan 1 and there are 365 d / year')
-        }
+    stopifnot( pft != "evergreen" & any(is.na(DOY)) )
+    stopifnot(pft != "evergreen" & any(is.na(p[28:30]) ))
+    ## If DOY is missing we eedto give to the model, although it
+    if (pft == "evergreen" & any(is.na(DOY)) {
+        DOY = rep(1:365, ceiling(len/365))
+        DOY = DOY[1:len]
+        warning("DOY not given as input or some missing: assuming calculation starts from 1st Jan and year has 365 days")
     }
-    
         
     .C('call_preles', 
           PAR=as.double(PAR), TAir=as.double(TAir), VPD=as.double(VPD),
