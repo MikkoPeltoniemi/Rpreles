@@ -15,9 +15,9 @@ PRELES( PAR = c(30, 40, 60),  TAir = c(10, 10, 10),  DOY = 1:3,  VPD = c(1, 1, 1
 
 
 ## Run PRELES model for a Boreal sites, a fake boreal site
-data('s1.rdata')
+data('s1')
 ## Minunno's posteriori parameter set:
-data('psetMAP.rdata')
+data('psetMAP')
 
 GPPsim <- ETsim <- matrix(NA, nrow(pSample) + 1, length(s1$PAR))
 preles_MAP <-  PRELES(PAR = s1$PAR, TAir = s1$TAir, DOY = s1$DOY, VPD = s1$VPD,
