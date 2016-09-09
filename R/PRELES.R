@@ -88,7 +88,7 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     }
     ## There is no phenology of shoot growth for conifers presently
     if (pft == "evergreen") {
-        if (any(is.na(p[28:30]) warning('Phenology parameters given, but not implemented in the model for conifers.')
+        if (any(is.na(p[28:30]))) warning('Phenology parameters given, but not implemented in the model for conifers.')
         p[28] = -999
     }
     ## If DOY is missing we eedto give to the model, although it
