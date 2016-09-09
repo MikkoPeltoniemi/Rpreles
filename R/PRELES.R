@@ -91,11 +91,10 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
         if (any(is.na(p[28:30]))) warning('Phenology parameters given, but not implemented in the model for conifers.')
         p[28] = -999
     }
-    ## If DOY is missing we eedto give to the model, although it
+    ## If DOY is missing we need to give to the model, although conifer shoot growth phenology is not implemented.
     if (pft == "evergreen" & any(is.na(DOY))) {
         DOY = rep(1:365, ceiling(len/365))
         DOY = DOY[1:len]
-        warning("DOY not given as input or some missing: assuming calculation starts from 1st Jan and year has 365 days")
     }
         
     .C('call_preles', 
