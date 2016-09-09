@@ -85,7 +85,7 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
     stopifnot( pft != "evergreen" & any(is.na(DOY)) )
     stopifnot(pft != "evergreen" & any(is.na(p[28:30]) ))
     ## If DOY is missing we eedto give to the model, although it
-    if (pft == "evergreen" & any(is.na(DOY)) {
+    if (pft == "evergreen" & any(is.na(DOY))) {
         DOY = rep(1:365, ceiling(len/365))
         DOY = DOY[1:len]
         warning("DOY not given as input or some missing: assuming calculation starts from 1st Jan and year has 365 days")
