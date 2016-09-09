@@ -13,13 +13,11 @@ PRELES( PAR = c(30, 40, 60),  TAir = c(10, 10, 10),  DOY = 1:3,  VPD = c(1, 1, 1
 ## $SW
 ## [1] 178.8502 177.3484 175.3225
 
-## Documentation (note still under construction) about the PRELES function can be obtained by
-help(PRELES)
 
 ## Run PRELES model for a Boreal sites, a fake boreal site
-load('boreal_site.rdata')
+data('boreal_site.rdata')
 ## Minunno's posteriori parameter set:
-load('parameters.rdata')
+data('parameters.rdata')
 
 GPPsim <- ETsim <- matrix(NA, nrow(pSample) + 1, length(s1$PAR))
 preles_MAP <-  PRELES(PAR = s1$PAR, TAir = s1$TAir, DOY = s1$DOY, VPD = s1$VPD,
