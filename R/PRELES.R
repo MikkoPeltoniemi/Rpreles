@@ -82,8 +82,10 @@ PRELES = function(PAR, TAir, VPD, Precip, CO2, fAPAR, ## REQUIRED
 
     ## DOY is needed for other than conifers. Phenology model requires parameters:
     ## tip: p[28:30] <- c(57, 1.5, 134) # Phenol. mod. (Linkosalo et al. 2008) 
-    stopifnot(pft == "evergreen" & !any(is.na(DOY)) )
-    stopifnot(pft == "evergreen" & !any(is.na(p[28:30]) ))
+    if (pft != "evergreen") {
+        stopifnot(all(!is.na(DOY)))
+        stopifnot(all(!is.na(p[28:30])))
+    }
     ## If DOY is missing we eedto give to the model, although it
     if (pft == "evergreen" & any(is.na(DOY))) {
         DOY = rep(1:365, ceiling(len/365))
