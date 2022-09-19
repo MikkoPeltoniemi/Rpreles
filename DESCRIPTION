@@ -4,7 +4,7 @@ Title: Implements PRELES model to be called from R
 Version: 1.0
 Date: 2013-04-25
 Author: Mikko Peltoniemi <mikko.peltoniemi@metla.fi>
-Maintainer: <mikko.peltoniemi@metla.fi>
+Maintainer: Mikko Peltoniemi <mikko.peltoniemi@metla.fi>
 Description: Awaiting manuscript decision
 License: What Licence is it under ?
 Depends:
