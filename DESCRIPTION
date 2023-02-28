@@ -3,10 +3,10 @@ Type: Package
 Title: Implements PRELES model to be called from R
 Version: 1.0
 Date: 2013-04-25
-Author: Mikko Peltoniemi <mikko.peltoniemi@metla.fi>
-Maintainer: Mikko Peltoniemi <mikko.peltoniemi@metla.fi>
-Description: Awaiting manuscript decision
-License: What Licence is it under ?
+Author: Mikko Peltoniemi <mikko.peltoniemi@luke.fi>
+Maintainer: Mikko Peltoniemi <mikko.peltoniemi@luke.fi>
+Description: Simple model to simulate forest ecosystem CO2 and H2O exchange and water balance.
+License: GNU GPLv3
 Depends:
 LinkingTo:
 Packaged: 2013-05-02 09:50:38 UTC; peltonie
